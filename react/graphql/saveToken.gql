@@ -1,0 +1,3 @@
+mutation saveToken($token: String) {
+  saveToken(token: $token)
+}

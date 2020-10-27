@@ -1,0 +1,10 @@
+{
+  "admin.app.example": {
+    "component": "adminExample",
+    "path": "/admin/app/adminExample"
+  },
+  "admin.app.otherexample": {
+    "component": "adminOtherExample",
+    "path": "/admin/app/adminOtherExample"
+  }
+}

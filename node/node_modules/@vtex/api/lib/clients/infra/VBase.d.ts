@@ -1,0 +1,59 @@
+/// <reference types="node" />
+import { IncomingMessage } from 'http';
+import { Readable } from 'stream';
+import { InstanceOptions, IOResponse, RequestTracingConfig } from '../../HttpClient';
+import { BucketMetadata, FileListItem } from '../../responses';
+import { IOContext } from '../../service/worker/runtime/typings';
+import { InfraClient } from './InfraClient';
+export declare class VBase extends InfraClient {
+    constructor(context: IOContext, options?: InstanceOptions);
+    getBucket: (bucket: string, tracingConfig?: RequestTracingConfig | undefined) => Promise<BucketMetadata>;
+    resetBucket: (bucket: string, tracingConfig?: RequestTracingConfig | undefined) => Promise<IOResponse<void>>;
+    listFiles: (bucket: string, opts?: string | VBaseOptions | undefined, tracingConfig?: RequestTracingConfig | undefined) => Promise<BucketFileList>;
+    getFile: (bucket: string, path: string, tracingConfig?: RequestTracingConfig | undefined) => Promise<{
+        data: Buffer;
+        headers: any;
+    }>;
+    getJSON: <T>(bucket: string, path: string, nullIfNotFound?: boolean | undefined, conflictsResolver?: ConflictsResolver<T> | undefined, tracingConfig?: RequestTracingConfig | undefined) => Promise<T>;
+    getRawJSON: <T>(bucket: string, path: string, nullIfNotFound?: boolean | undefined, conflictsResolver?: ConflictsResolver<T> | undefined, tracingConfig?: RequestTracingConfig | undefined) => Promise<IOResponse<T>>;
+    getFileStream: (bucket: string, path: string, tracingConfig?: RequestTracingConfig | undefined) => Promise<IncomingMessage>;
+    saveFile: (bucket: string, path: string, stream: Readable, gzip?: boolean, ttl?: number | undefined, tracingConfig?: RequestTracingConfig | undefined, ifMatch?: string | undefined) => Promise<void>;
+    getFileMetadata: (bucket: string, path: string, tracingConfig?: RequestTracingConfig | undefined) => Promise<IOResponse<void>>;
+    saveJSON: <T>(bucket: string, path: string, data: T, tracingConfig?: RequestTracingConfig | undefined, ifMatch?: string | undefined) => Promise<void>;
+    saveZippedContent: (bucket: string, path: string, stream: Readable, tracingConfig?: RequestTracingConfig | undefined, ifMatch?: string | undefined) => Promise<void>;
+    deleteFile: (bucket: string, path: string, tracingConfig?: RequestTracingConfig | undefined, ifMatch?: string | undefined) => Promise<IOResponse<void>>;
+    getConflicts: <T>(bucket: string, tracingConfig?: RequestTracingConfig | undefined) => Promise<T>;
+    resolveConflict: <T>(bucket: string, path: string, content: any, tracingConfig?: RequestTracingConfig | undefined) => Promise<T>;
+    private saveContent;
+}
+export interface BucketFileList {
+    data: FileListItem[];
+    next: string;
+    smartCacheHeaders: any;
+}
+export interface VBaseOptions {
+    prefix?: string;
+    next?: string;
+    limit?: number;
+}
+export interface VBaseSaveOptions {
+    gzip?: boolean;
+    unzip?: boolean;
+    ttl?: number;
+}
+export interface VBaseConflictData {
+    path: string;
+    base: VBaseConflict;
+    master: VBaseConflict;
+    mine: VBaseConflict;
+}
+export interface VBaseConflict {
+    contentOmitted: boolean;
+    deleted: boolean;
+    mimeType: string;
+    parsedContent?: any;
+    content: string;
+}
+export interface ConflictsResolver<T> {
+    resolve: () => T | Promise<T>;
+}
