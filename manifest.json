@@ -1,7 +1,7 @@
 {
   "vendor": "vtex",
   "name": "admin-vbase-example",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "title": "Admin Example - VBase",
   "description": "Admin Example - VBase",
   "builders": {
@@ -15,7 +15,9 @@
   "dependencies": {
     "vtex.styleguide": "9.x"
   },
-  "registries": ["smartcheckout"],
+  "registries": [
+    "smartcheckout"
+  ],
   "policies": [
     {
       "name": "outbound-access",
